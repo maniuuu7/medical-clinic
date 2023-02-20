@@ -2,6 +2,7 @@ package com.maniek.medicalclinic.model;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -14,8 +15,8 @@ public class Patient {
     private String password;
     private String idCardNo;
     private String firstName;
-    private String latName;
-    private double phoneNumber;
-    private String birthday;
+    private String lastName;
+    private String phoneNumber;
+    private LocalDate birthday;
 
 }
