@@ -12,7 +12,6 @@ public class PatientRepositoryImpl implements PatientRepository {
     private List<Patient> patients = new ArrayList<>();
 
 
-
     @Override
     public Optional<Patient> getPatientByEmail(String email) {
         return patients.stream()
@@ -27,44 +26,29 @@ public class PatientRepositoryImpl implements PatientRepository {
 
     @Override
     public Optional<Patient> addPatient(Patient patient) {
-        Optional<Patient> patient1 = patients.stream()
-                .filter(patient2 -> patient2.getEmail().equals(patient.getEmail()))
-                .findFirst();
-        if (patient1.isPresent()) {
-            return Optional.empty();
-        }
         patients.add(patient);
         return Optional.of(patient);
     }
 
     @Override
-    public Optional<Patient> deletePatientByEmail(String email) {
-        Optional<Patient> patient = patients.stream()
-                .filter(patient1 -> patient1.getEmail().equals(email))
-                .findFirst();
-        if (patient.isEmpty()) {
-            return Optional.empty();
-        }
-        patients.remove(patient.get());
-        return patient;
+    public Optional<Patient> deletePatient(Patient patient) {
+        patients.remove(patient);
+        return Optional.of(patient);
     }
 
     @Override
-    public Optional<Patient> editPatient(String email, Patient patient) {
-        Optional<Patient> entity = patients.stream()
-                .filter(patient1 -> patient1.getEmail().equals(email))
-                .findFirst();
-        if (entity.isEmpty()) {
-            return Optional.empty();
-        }
-        entity.get().setBirthday(patient.getBirthday());
-        entity.get().setEmail(patient.getEmail());
-        entity.get().setPassword(patient.getPassword());
-        entity.get().setFirstName(patient.getFirstName());
-        entity.get().setLastName(patient.getLastName());
-        entity.get().setIdCardNo(patient.getIdCardNo());
-        entity.get().setPhoneNumber(patient.getPhoneNumber());
-        return entity;
+    public Optional<Patient> editPatient(String email, Patient editInfo) {
+        Optional<Patient> patient = getPatientByEmail(email);
+        patient.ifPresent(entity -> {
+            entity.setBirthday(editInfo.getBirthday());
+            entity.setEmail(editInfo.getEmail());
+            entity.setPassword(editInfo.getPassword());
+            entity.setFirstName(editInfo.getFirstName());
+            entity.setLastName(editInfo.getLastName());
+            entity.setIdCardNo(editInfo.getIdCardNo());
+            entity.setPhoneNumber(editInfo.getPhoneNumber());
+        });
+        return patient;
     }
 
     @Override
