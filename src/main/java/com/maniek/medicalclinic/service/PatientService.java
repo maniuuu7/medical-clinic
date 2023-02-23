@@ -28,11 +28,15 @@ public class PatientService {
     }
 
     public Optional<Patient> deletePatientByEmail(String email) {
-        return patientRepository.deletePatientByEmail(email);
+        Optional<Patient> patient = patientRepository.getPatientByEmail(email);
+        if (patient.isEmpty()) {
+            return Optional.empty();
+        }
+        return patientRepository.deletePatient(patient.get());
     }
 
-    public Optional<Patient> editPatient(String email, Patient patient) {
-        return patientRepository.editPatient(email, patient);
+    public Optional<Patient> editPatient(String email, Patient editInfo) {
+        return patientRepository.editPatient(email, editInfo);
     }
 
     public Optional<String> editPassword(String email, String password) {
