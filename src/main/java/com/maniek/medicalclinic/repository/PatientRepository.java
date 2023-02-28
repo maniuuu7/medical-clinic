@@ -10,7 +10,7 @@ public interface PatientRepository {
     Optional<Patient> getPatientByEmail(String email);
     List<Patient> getAllPatients();
     Optional<Patient> addPatient(Patient patient);
-    Optional<Patient> deletePatient(Patient patient);
+    Patient deletePatient(Patient patient);
     Optional<Patient> editPatient( String email, Patient editInfo);
     Optional<String> editPassword(String email, String password);
 

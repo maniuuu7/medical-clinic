@@ -24,9 +24,7 @@ public class PatientController {
 
     @GetMapping("/{email}")
     public ResponseEntity<Patient> getPatientByEmail(@PathVariable("email") String email) {
-        Optional<Patient> patient = patientService.getPatientByEmail(email);
-        return patient.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+       return ResponseEntity.ok(patientService.getPatientByEmail(email));
     }
 
     @PostMapping
@@ -40,22 +38,16 @@ public class PatientController {
 
     @DeleteMapping("/{email}")
     public ResponseEntity<Patient> deletePatientByEmail(@PathVariable("email") String email) {
-        Optional<Patient> patient = patientService.deletePatientByEmail(email);
-        return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+       return ResponseEntity.ok(patientService.deletePatientByEmail(email));
     }
 
     @PutMapping("/{email}")
     public ResponseEntity<Patient> editPatient(@PathVariable("email") String email, @RequestBody Patient patient) {
-        Optional<Patient> entity = patientService.editPatient(email, patient);
-        return entity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+       return ResponseEntity.ok(patientService.editPatient(email, patient));
     }
 
     @PatchMapping("/{email}")
     public ResponseEntity<String> editPassword(@PathVariable("email") String email, @RequestBody String password) {
-        Optional<String> patient = patientService.editPassword(email, password);
-        if (patient.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok("Password was changed successfully");
+        return ResponseEntity.ok(patientService.editPassword(email, password));
     }
 }
