@@ -55,17 +55,13 @@ public class PatientServiceTest {
     }
 
     @Test
-    void getPatientByEmail_PatientExists_ThrownException() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+    void getPatientByEmail_PatientNotFound_ThrownException() {
         when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
-                catchThrowableOfType(() -> patientService.getPatientByEmail(eq("dsadsa")), PatientNotFoundException.class);
+                Assertions.assertThrows( PatientNotFoundException.class, () -> patientService.getPatientByEmail(eq("dsadsa")));
 
-        assertThat(thrown)
-                .hasMessage("Patient not found");
-
-        Assertions.assertEquals("dsadsa", patient.getEmail());
+        Assertions.assertEquals("Patient not found", thrown.getMessage());
     }
 
     @Test
@@ -86,11 +82,9 @@ public class PatientServiceTest {
         when(patientRepository.getPatientByEmail(eq("ouyut"))).thenReturn(Optional.of(patient2));
 
         PatientIllegalArgumentException thrown =
-                catchThrowableOfType(() -> patientService.addPatient(patient2), PatientIllegalArgumentException.class);
+                Assertions.assertThrows( PatientIllegalArgumentException.class, () -> patientService.addPatient(patient2));
 
-        assertThat(thrown).hasMessage("Error during patient creation. Patient with given email exists");
-
-        Assertions.assertEquals("ouyut", patient2.getEmail());
+        Assertions.assertEquals("Error during patient creation. Patient with given email exists", thrown.getMessage());
     }
 
     @Test
@@ -106,17 +100,12 @@ public class PatientServiceTest {
 
     @Test
     void deletePatientByEmail_PatientNotFound_ThrownException() {
-        Patient patient1 = new Patient("fdsfsd", "dsad", " fhhgf", "fghfg", "fghfgh", "986345213", LocalDate.of(1995, 04, 12));
-
-        when(patientRepository.getPatientByEmail(eq(patient1.getEmail()))).thenReturn(Optional.empty());
+        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
-                catchThrowableOfType(() -> patientService.deletePatientByEmail(patient1.getEmail()), PatientNotFoundException.class);
+                Assertions.assertThrows( PatientNotFoundException.class, () -> patientService.deletePatientByEmail("dsadsa"));
 
-        assertThat(thrown)
-                .hasMessage("Patient not found");
-
-        Assertions.assertEquals("fdsfsd", patient1.getEmail());
+        Assertions.assertEquals("Patient not found", thrown.getMessage());
     }
 
     @Test
@@ -135,18 +124,13 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_PatientNotFound_ExceptionThrown() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
         Patient editInfo = new Patient("htyht", "htyht", "rewrew", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
-
-        when(patientRepository.getPatientByEmail(eq(patient.getEmail()))).thenReturn(Optional.empty());
+        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
-                catchThrowableOfType(() -> patientService.editPatient(patient.getEmail(), editInfo), PatientNotFoundException.class);
+                Assertions.assertThrows( PatientNotFoundException.class,() -> patientService.editPatient("dsadsa", editInfo));
 
-        assertThat(thrown)
-                .hasMessage("Patient not found");
-
-        Assertions.assertEquals("dsadsa", patient.getEmail());
+        Assertions.assertEquals("Patient not found", thrown.getMessage());
     }
 
     @Test
@@ -163,18 +147,13 @@ public class PatientServiceTest {
     }
 @Test
     void editPassword_PatientNotFound_ExceptionThrown(){
-    Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
     String password = "dsads";
     String email = "jghjgh";
-
-    when(patientRepository.getPatientByEmail(patient.getEmail())).thenReturn(Optional.empty());
+    when(patientRepository.getPatientByEmail("dsadsa")).thenReturn(Optional.empty());
 
     PatientNotFoundException thrown =
-            catchThrowableOfType(() ->patientService.editPassword(email, password), PatientNotFoundException.class);
+           Assertions.assertThrows( PatientNotFoundException.class, () ->patientService.editPassword(email, password));
 
-    assertThat(thrown)
-            .hasMessage("Patient not found");
-
-    Assertions.assertEquals("dsadsa", patient.getEmail());
+    Assertions.assertEquals("Patient not found" , thrown.getMessage());
 }
 }
