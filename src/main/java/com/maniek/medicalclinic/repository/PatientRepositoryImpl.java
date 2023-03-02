@@ -31,9 +31,9 @@ public class PatientRepositoryImpl implements PatientRepository {
     }
 
     @Override
-    public Optional<Patient> deletePatient(Patient patient) {
+    public Patient deletePatient(Patient patient) {
         patients.remove(patient);
-        return Optional.of(patient);
+        return patient;
     }
 
     @Override

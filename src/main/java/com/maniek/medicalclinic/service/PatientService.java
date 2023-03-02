@@ -1,5 +1,7 @@
 package com.maniek.medicalclinic.service;
 
+import com.maniek.medicalclinic.exception.PatientIllegalArgumentException;
+import com.maniek.medicalclinic.exception.PatientNotFoundException;
 import com.maniek.medicalclinic.model.Patient;
 import com.maniek.medicalclinic.repository.PatientRepository;
 import lombok.AllArgsConstructor;
@@ -19,27 +21,41 @@ public class PatientService {
         return patientRepository.getAllPatients();
     }
 
-    public Optional<Patient> getPatientByEmail(String email) {
-        return patientRepository.getPatientByEmail(email);
+    public Patient getPatientByEmail(String email) {
+        Patient patient = patientRepository.getPatientByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException());
+        return patient;
     }
 
     public Optional<Patient> addPatient(Patient patient) {
+        Optional<Patient> patient1 = patientRepository.getPatientByEmail(patient.getEmail());
+        if (patient1.isPresent()){
+            throw new PatientIllegalArgumentException("Error during patient creation. Patient with given email exists");
+        }
         return patientRepository.addPatient(patient);
     }
 
-    public Optional<Patient> deletePatientByEmail(String email) {
-        Optional<Patient> patient = patientRepository.getPatientByEmail(email);
-        if (patient.isEmpty()) {
-            return Optional.empty();
+    public Patient deletePatientByEmail(String email) {
+        Patient patient = patientRepository.getPatientByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException());
+        return patientRepository.deletePatient(patient);
+    }
+
+    public Patient editPatient(String email, Patient editInfo) {
+        Patient patient = patientRepository.getPatientByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException());
+       Optional <Patient> patient1 = patientRepository.getPatientByEmail(editInfo.getEmail());
+        if (patient1.isPresent() && !email.equals(editInfo.getEmail())){
+            throw new PatientIllegalArgumentException("Error during patient creation. Patient with given email exists");
         }
-        return patientRepository.deletePatient(patient.get());
+        Patient editedPatient = patientRepository.editPatient(email, editInfo).get();
+        return editedPatient;
     }
 
-    public Optional<Patient> editPatient(String email, Patient editInfo) {
-        return patientRepository.editPatient(email, editInfo);
-    }
-
-    public Optional<String> editPassword(String email, String password) {
-        return patientRepository.editPassword(email, password);
+    public String editPassword(String email, String password) {
+        Patient patient = patientRepository.getPatientByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException());
+        String result = patientRepository.editPassword(email, password).get();
+        return result;
     }
 }
