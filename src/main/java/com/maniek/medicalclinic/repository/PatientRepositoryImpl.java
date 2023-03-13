@@ -1,6 +1,6 @@
 package com.maniek.medicalclinic.repository;
 
-import com.maniek.medicalclinic.model.Patient;
+import com.maniek.medicalclinic.model.entity.Patient;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

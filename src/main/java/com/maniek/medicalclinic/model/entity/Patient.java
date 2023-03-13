@@ -1,4 +1,4 @@
-package com.maniek.medicalclinic.model;
+package com.maniek.medicalclinic.model.entity;
 
 import lombok.*;
 
@@ -18,5 +18,4 @@ public class Patient {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
-
 }
