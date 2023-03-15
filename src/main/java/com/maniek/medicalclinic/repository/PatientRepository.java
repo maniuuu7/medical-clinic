@@ -1,18 +1,12 @@
 package com.maniek.medicalclinic.repository;
 
-import com.maniek.medicalclinic.model.Patient;
+import com.maniek.medicalclinic.model.entity.Patient;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PatientRepository {
+public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    Optional<Patient> getPatientByEmail(String email);
-    List<Patient> getAllPatients();
-    Optional<Patient> addPatient(Patient patient);
-    Patient deletePatient(Patient patient);
-    Optional<Patient> editPatient( String email, Patient editInfo);
-    Optional<String> editPassword(String email, String password);
-
-
+    Optional<Patient> findByEmail(String email);
 }
