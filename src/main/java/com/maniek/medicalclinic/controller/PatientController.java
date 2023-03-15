@@ -24,26 +24,23 @@ public class PatientController {
 
     @GetMapping("/{email}")
     public ResponseEntity<PatientDTO> getPatientByEmail(@PathVariable("email") String email) {
-       return ResponseEntity.ok(patientService.getPatientByEmail(email));
+        return ResponseEntity.ok(patientService.getPatientByEmail(email));
     }
 
     @PostMapping
     public ResponseEntity<PatientDTO> addPatient(@RequestBody Patient patient) {
-        Optional<PatientDTO> patient1 = patientService.addPatient(patient);
-        if (patient1.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(patient1.get());
+        PatientDTO patient1 = patientService.addPatient(patient);
+        return ResponseEntity.ok(patient1);
     }
 
     @DeleteMapping("/{email}")
     public ResponseEntity<PatientDTO> deletePatientByEmail(@PathVariable("email") String email) {
-       return ResponseEntity.ok(patientService.deletePatientByEmail(email));
+        return ResponseEntity.ok(patientService.deletePatientByEmail(email));
     }
 
     @PutMapping("/{email}")
     public ResponseEntity<PatientDTO> editPatient(@PathVariable("email") String email, @RequestBody Patient patient) {
-       return ResponseEntity.ok(patientService.editPatient(email, patient));
+        return ResponseEntity.ok(patientService.editPatient(email, patient));
     }
 
     @PatchMapping("/{email}")
