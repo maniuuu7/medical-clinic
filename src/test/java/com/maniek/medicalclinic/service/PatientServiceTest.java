@@ -45,11 +45,11 @@ public class PatientServiceTest {
     @Test
     void showPatient_PatientsExist_PatientsReturned() {
         List<Patient> patients = new ArrayList<>();
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        Patient patient1 = new Patient("fdsfsd", "dsad", " fhhgf", "fghfg", "fghfgh", "986345213", LocalDate.of(1995, 04, 12));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient patient1 = new Patient( 1L,"fdsfsd", "dsad", " fhhgf", "fghfg", "fghfgh", "986345213", LocalDate.of(1995, 04, 12));
         patients.add(patient);
         patients.add(patient1);
-        when(patientRepository.getAllPatients()).thenReturn(patients);
+        when(patientRepository.findAll()).thenReturn(patients);
 
         List<PatientDTO> result = patientService.showPatient();
 
@@ -59,8 +59,8 @@ public class PatientServiceTest {
 
     @Test
     void getPatientByEmail_PatientExists_PatientsReturned() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
 
         PatientDTO patient1 = patientService.getPatientByEmail("dsadsa");
 
@@ -70,7 +70,7 @@ public class PatientServiceTest {
 
     @Test
     void getPatientByEmail_PatientNotFound_ThrownException() {
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
                 Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.getPatientByEmail(eq("dsadsa")));
@@ -80,9 +80,9 @@ public class PatientServiceTest {
 
     @Test
     void addPatient_CorrectData_PatientAdded() {
-        Patient patient2 = new Patient("ouyut", "43543", "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
-        when(patientRepository.addPatient(patient2)).thenReturn(Optional.of(patient2));
-        when(patientRepository.getPatientByEmail(eq("ouyut"))).thenReturn(Optional.empty());
+        Patient patient2 = new Patient(1L,"ouyut", "43543", "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
+        when(patientRepository.save(patient2)).thenReturn(patient2);
+        when(patientRepository.findByEmail(eq("ouyut"))).thenReturn(Optional.empty());
 
         Optional<PatientDTO> patient = patientService.addPatient(patient2);
 
@@ -92,8 +92,8 @@ public class PatientServiceTest {
 
     @Test
     void addPatient_ExistsPatient_IllegalArgumentException() {
-        Patient patient2 = new Patient("ouyut", "43543", "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
-        when(patientRepository.getPatientByEmail(eq("ouyut"))).thenReturn(Optional.of(patient2));
+        Patient patient2 = new Patient(1L,"ouyut", "43543", "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
+        when(patientRepository.findByEmail(eq("ouyut"))).thenReturn(Optional.of(patient2));
 
         PatientIllegalArgumentException thrown =
                 Assertions.assertThrows(PatientIllegalArgumentException.class, () -> patientService.addPatient(patient2));
@@ -103,8 +103,8 @@ public class PatientServiceTest {
 
     @Test
     void addPatient_PatientValidateInfo_ExceptionThrown() {
-        Patient patient2 = new Patient("ouyut", null, "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
-        when(patientRepository.getPatientByEmail(eq("ouyut"))).thenReturn(Optional.empty());
+        Patient patient2 = new Patient(1L,"ouyut", null, "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
+        when(patientRepository.findByEmail(eq("ouyut"))).thenReturn(Optional.empty());
 
         PatientIllegalArgumentException thrown =
                 Assertions.assertThrows(PatientIllegalArgumentException.class, () -> patientService.addPatient(patient2));
@@ -114,9 +114,8 @@ public class PatientServiceTest {
 
     @Test
     void deletePatientByEmail_PatientExists_PatientDeleted() {
-        Patient patient1 = new Patient("fdsfsd", "dsad", " fhhgf", "fghfg", "fghfgh", "986345213", LocalDate.of(1995, 04, 12));
-        when(patientRepository.getPatientByEmail(patient1.getEmail())).thenReturn(Optional.ofNullable(patient1));
-        when(patientRepository.deletePatient(patient1)).thenReturn(patient1);
+        Patient patient1 = new Patient(1L,"fdsfsd", "dsad", " fhhgf", "fghfg", "fghfgh", "986345213", LocalDate.of(1995, 04, 12));
+        when(patientRepository.findByEmail(patient1.getEmail())).thenReturn(Optional.ofNullable(patient1));
 
         PatientDTO patient = patientService.deletePatientByEmail(patient1.getEmail());
 
@@ -125,7 +124,7 @@ public class PatientServiceTest {
 
     @Test
     void deletePatientByEmail_PatientNotFound_ThrownException() {
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
                 Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.deletePatientByEmail("dsadsa"));
@@ -135,11 +134,10 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_PatientExists_PatientEdited() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        Patient editInfo = new Patient("htyht", "htyht", "dasds", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
-        when(patientRepository.getPatientByEmail(eq(patient.getEmail()))).thenReturn(Optional.of(patient));
-        when(patientRepository.getPatientByEmail(eq(editInfo.getEmail()))).thenReturn(Optional.empty());
-        when(patientRepository.editPatient(eq(patient.getEmail()), eq(editInfo))).thenReturn(Optional.of(editInfo));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient editInfo = new Patient(2L,"htyht", "htyht", "dasds", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
+        when(patientRepository.findByEmail(eq(patient.getEmail()))).thenReturn(Optional.of(patient));
+        when(patientRepository.findByEmail(eq(editInfo.getEmail()))).thenReturn(Optional.empty());
 
         PatientDTO patient1 = patientService.editPatient(patient.getEmail(), editInfo);
 
@@ -149,10 +147,10 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_PatientExistsWithEmail_PatientEdited() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        Patient editInfo = new Patient("dsadsa", "htyht", "dasds", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
-        when(patientRepository.getPatientByEmail(eq(patient.getEmail()))).thenReturn(Optional.of(patient));
-        when(patientRepository.editPatient(eq(patient.getEmail()), eq(editInfo))).thenReturn(Optional.of(editInfo));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient editInfo = new Patient(1L,"dsadsa", "htyht", "dasds", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
+        when(patientRepository.findByEmail(eq(patient.getEmail()))).thenReturn(Optional.of(patient));
+//        when(patientRepository.editPatient(eq(patient.getEmail()), eq(editInfo))).thenReturn(Optional.of(editInfo));
 
 
         PatientDTO patient1 = patientService.editPatient(patient.getEmail(), editInfo);
@@ -163,8 +161,8 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_PatientNotFound_ExceptionThrown() {
-        Patient editInfo = new Patient("htyht", "htyht", "rewrew", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
+        Patient editInfo = new Patient(1L,"htyht", "htyht", "rewrew", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
                 Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.editPatient("dsadsa", editInfo));
@@ -174,9 +172,9 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_IncorrectIdCardNo_ExceptionThrown() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        Patient editInfo = new Patient("dsadsa", "htyht", "gfdgd", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient editInfo = new Patient(2L,"dsadsa", "htyht", "gfdgd", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
 
         PatientIllegalArgumentException thrown =
                 Assertions.assertThrows(PatientIllegalArgumentException.class, () -> patientService.editPatient("dsadsa", editInfo));
@@ -186,10 +184,10 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_PatientEmailIsExists_ExceptionThrown() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        Patient editInfo = new Patient("dfgfd", "htyht", "dasds", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
-        when(patientRepository.getPatientByEmail(eq("dfgfd"))).thenReturn(Optional.of(editInfo));
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient editInfo = new Patient(1L,"dfgfd", "htyht", "dasds", "gdfgdf", "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
+        when(patientRepository.findByEmail(eq("dfgfd"))).thenReturn(Optional.of(editInfo));
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
 
         PatientIllegalArgumentException thrown =
                 Assertions.assertThrows(PatientIllegalArgumentException.class, () -> patientService.editPatient("dsadsa", editInfo));
@@ -199,10 +197,10 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_PatientValidateInfo_ExceptionThrown() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "fsdfds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
-        Patient editInfo = new Patient("dfgfd", "htyht", "gfdgd", null, "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "fsdfds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient editInfo = new Patient(1L,"dfgfd", "htyht", "gfdgd", null, "hgfhgfh", "567456354", LocalDate.of(1987, 05, 12));
 
-        when(patientRepository.getPatientByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
+        when(patientRepository.findByEmail(eq("dsadsa"))).thenReturn(Optional.of(patient));
 
         PatientIllegalArgumentException thrown =
                 Assertions.assertThrows(PatientIllegalArgumentException.class, () -> patientService.editPatient("dsadsa", editInfo));
@@ -213,11 +211,11 @@ public class PatientServiceTest {
 
     @Test
     void editPassword_PatientExists_PatientPasswordEdited() {
-        Patient patient = new Patient("dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
+        Patient patient = new Patient(1L,"dsadsa", "sdsa", "dasds", "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 05));
         String password = "dsads";
         String email = "jghjgh";
-        when(patientRepository.getPatientByEmail(eq(email))).thenReturn(Optional.of(patient));
-        when(patientRepository.editPassword(eq(email), eq(password))).thenReturn(Optional.of(password));
+        when(patientRepository.findByEmail(eq(email))).thenReturn(Optional.of(patient));
+//        when(patientRepository.editPassword(eq(email), eq(password))).thenReturn(Optional.of(password));
 
         String result = patientService.editPassword(email, password);
 
@@ -228,7 +226,7 @@ public class PatientServiceTest {
     void editPassword_PatientNotFound_ExceptionThrown() {
         String password = "dsads";
         String email = "jghjgh";
-        when(patientRepository.getPatientByEmail("dsadsa")).thenReturn(Optional.empty());
+        when(patientRepository.findByEmail("dsadsa")).thenReturn(Optional.empty());
 
         PatientNotFoundException thrown =
                 Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.editPassword(email, password));

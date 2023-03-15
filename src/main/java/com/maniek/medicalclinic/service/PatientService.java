@@ -20,44 +20,52 @@ public class PatientService {
 
 
     public List<PatientDTO> showPatient() {
-        return patientMapper.mapToListPatientDTO(patientRepository.getAllPatients());
+        return patientMapper.mapToListPatientDTO(patientRepository.findAll());
     }
 
     public PatientDTO getPatientByEmail(String email) {
-        Patient patient = patientRepository.getPatientByEmail(email)
+        Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException());
         return patientMapper.mapToPatientDTO(patient);
     }
 
     public Optional<PatientDTO> addPatient(Patient patient) {
-        Optional<Patient> patient1 = patientRepository.getPatientByEmail(patient.getEmail());
+        Optional<Patient> patient1 = patientRepository.findByEmail(patient.getEmail());
         if (patient1.isPresent()) {
             throw new PatientIllegalArgumentException("Error during patient creation. Patient with given email exists");
         }
         if (!validatePatient(patient)) {
             throw new PatientIllegalArgumentException("Incorrect patient data");
         }
-        return Optional.ofNullable(patientMapper.mapToPatientDTO(patientRepository.addPatient(patient).get()));
+        Patient entity = patientRepository.save(patient);
+        return Optional.ofNullable(patientMapper.mapToPatientDTO(entity));
     }
 
     public PatientDTO deletePatientByEmail(String email) {
-        Patient patient = patientRepository.getPatientByEmail(email)
+        Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException());
-        return patientMapper.mapToPatientDTO(patientRepository.deletePatient(patient));
+        patientRepository.delete(patient);
+        return patientMapper.mapToPatientDTO(patient);
     }
 
     public PatientDTO editPatient(String email, Patient editInfo) {
-        Patient patient = patientRepository.getPatientByEmail(email)
+        Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException());
-        if (!validatePatient(editInfo) || !validatePatientEdit(editInfo,patient)) {
+        if (!validatePatient(editInfo) || !validatePatientEdit(editInfo, patient)) {
             throw new PatientIllegalArgumentException("Incorrect patient data");
         }
-        Patient editedPatient = patientRepository.editPatient(email, editInfo).get();
-        return patientMapper.mapToPatientDTO(editedPatient);
+        patient.setEmail(editInfo.getEmail());
+        patient.setFirstName(editInfo.getFirstName());
+        patient.setLastName(editInfo.getLastName());
+        patient.setBirthday(editInfo.getBirthday());
+        patient.setPhoneNumber(editInfo.getPhoneNumber());
+        patient.setPassword(editInfo.getPassword());
+        patientRepository.save(patient);
+        return patientMapper.mapToPatientDTO(patient);
     }
 
     private boolean validatePatientEdit(Patient editInfo, Patient patientToEdit) {
-        Optional<Patient> patient = patientRepository.getPatientByEmail(editInfo.getEmail());
+        Optional<Patient> patient = patientRepository.findByEmail(editInfo.getEmail());
         if (patient.isPresent() && !editInfo.getEmail().equals(patientToEdit.getEmail())) {
             return false;
         }
@@ -68,13 +76,14 @@ public class PatientService {
     }
 
     public String editPassword(String email, String password) {
-        Patient patient = patientRepository.getPatientByEmail(email)
+        Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException());
         if (!validatePatient(patient)) {
             throw new PatientIllegalArgumentException("Incorrect patient data");
         }
-        String result = patientRepository.editPassword(email, password).get();
-        return result;
+        patient.setPassword(password);
+        patientRepository.save(patient);
+        return patient.getPassword();
     }
 
     public boolean validatePatient(Patient patient) {

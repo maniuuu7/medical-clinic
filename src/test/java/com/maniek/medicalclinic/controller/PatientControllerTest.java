@@ -38,7 +38,7 @@ public class PatientControllerTest {
 
     @Test
     void showPatient_PatientExists_PatientsReturned() throws Exception {
-        patientController.addPatient(new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
+        patientController.addPatient(new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
         mockMvc.perform(MockMvcRequestBuilders.get("/patients"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -48,7 +48,7 @@ public class PatientControllerTest {
 
     @Test
     void getPatientByEmail_PatientsExists_PatientReturned() throws Exception {
-        patientController.addPatient(new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
+        patientController.addPatient(new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
         mockMvc.perform(MockMvcRequestBuilders.get("/patients/mac@gmail.com"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -59,7 +59,7 @@ public class PatientControllerTest {
 
     @Test
     void addPatient_PatientExists_PatientAdded() throws Exception {
-        Patient patient = new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12));
+        Patient patient = new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12));
         mockMvc.perform(MockMvcRequestBuilders.post("/patients")
                         .content(objectMapper.writeValueAsString(patient))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -71,7 +71,7 @@ public class PatientControllerTest {
 
     @Test
     void deletePatientByEmail_PatientExists_DeletePatient() throws Exception {
-        patientController.addPatient(new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
+        patientController.addPatient(new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
         mockMvc.perform(MockMvcRequestBuilders.delete("/patients/mac@gmail.com"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -82,8 +82,8 @@ public class PatientControllerTest {
 
     @Test
     void editPatient_PatientExists_PatientEdited() throws Exception {
-        patientController.addPatient(new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 5, 12)));
-        Patient patient1 = new Patient("mac@gmail.com", "gdfgd", "2345", "dgfgd", "gfdgdf", "987564738", LocalDate.of(1998, 12, 7));
+        patientController.addPatient(new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 5, 12)));
+        Patient patient1 = new Patient(1L,"mac@gmail.com", "gdfgd", "2345", "dgfgd", "gfdgdf", "987564738", LocalDate.of(1998, 12, 7));
         mockMvc.perform(MockMvcRequestBuilders.put("/patients/mac@gmail.com")
                         .content(objectMapper.writeValueAsString(patient1))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -96,7 +96,7 @@ public class PatientControllerTest {
 
     @Test
     void editPatient_PatientWithGivenEmailDoesNotExist_404NotFound() throws Exception {
-        Patient editInfo = new Patient("mac@gmail.com", "gdfgd", "6475", "dgfgd", "gfdgdf", "987564738", LocalDate.of(1998, 12, 7));
+        Patient editInfo = new Patient(1L,"mac@gmail.com", "gdfgd", "6475", "dgfgd", "gfdgdf", "987564738", LocalDate.of(1998, 12, 7));
         mockMvc.perform(MockMvcRequestBuilders.put("/patients/dsa@gmail.com")
                         .content(objectMapper.writeValueAsString(editInfo))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -107,8 +107,8 @@ public class PatientControllerTest {
 
     @Test
     void editPatient_PatientIncorectDataError_400IllegalArgument() throws Exception {
-        patientController.addPatient(new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 5, 12)));
-        Patient editInfo = new Patient("mac@gmail.com", null, "6475", "dgfgd", "gfdgdf", "987564738", LocalDate.of(1998, 12, 7));
+        patientController.addPatient(new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 5, 12)));
+        Patient editInfo = new Patient(1L,"mac@gmail.com", null, "6475", "dgfgd", "gfdgdf", "987564738", LocalDate.of(1998, 12, 7));
         mockMvc.perform(MockMvcRequestBuilders.put("/patients/mac@gmail.com")
                         .content(objectMapper.writeValueAsString(editInfo))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -119,7 +119,7 @@ public class PatientControllerTest {
 
     @Test
     void editpassword_PatientExists_PatientPasswordEdited() throws Exception {
-        patientController.addPatient(new Patient("mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
+        patientController.addPatient(new Patient(1L,"mac@gmail.com", "dsadsa", "2345", "mac", "ghgj", "987456354", LocalDate.of(1995, 05, 12)));
         String password = "fgdfd";
         mockMvc.perform(MockMvcRequestBuilders.patch("/patients/mac@gmail.com")
                         .content(objectMapper.writeValueAsString(password))
