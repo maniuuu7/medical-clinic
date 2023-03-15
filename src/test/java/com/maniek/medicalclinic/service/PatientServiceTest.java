@@ -83,10 +83,9 @@ public class PatientServiceTest {
         Patient patient2 = new Patient(1L,"ouyut", "43543", "67756", "kjhk", "qewqe", "67567", LocalDate.of(1997, 06, 10));
         when(patientRepository.save(patient2)).thenReturn(patient2);
         when(patientRepository.findByEmail(eq("ouyut"))).thenReturn(Optional.empty());
+        PatientDTO patient = patientService.addPatient(patient2);
 
-        Optional<PatientDTO> patient = patientService.addPatient(patient2);
-
-        Assertions.assertEquals("ouyut", patient.get().getEmail());
+        Assertions.assertEquals("ouyut", patient.getEmail());
 
     }
 
