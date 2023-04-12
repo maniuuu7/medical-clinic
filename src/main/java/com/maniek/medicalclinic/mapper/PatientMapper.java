@@ -10,5 +10,6 @@ import java.util.List;
 public interface PatientMapper {
 
     PatientDTO mapToPatientDTO(Patient patient);
+
     List<PatientDTO> mapToListPatientDTO(List<Patient> patients);
 }
