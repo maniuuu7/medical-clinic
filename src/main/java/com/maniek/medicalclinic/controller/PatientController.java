@@ -8,11 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("patients")
+@RequestMapping("/patients")
 public class PatientController {
 
     private PatientService patientService;
