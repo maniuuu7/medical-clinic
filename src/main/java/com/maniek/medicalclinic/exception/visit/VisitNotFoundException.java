@@ -1,8 +1,8 @@
-package com.maniek.medicalclinic.exception;
+package com.maniek.medicalclinic.exception.visit;
 
 public class VisitNotFoundException extends RuntimeException {
 
-    public VisitNotFoundException(String visitNotFound) {
+    public VisitNotFoundException() {
         super("Visit not found");
     }
 }

@@ -2,18 +2,18 @@ package com.maniek.medicalclinic.controller;
 
 import com.maniek.medicalclinic.model.dto.DoctorDTO;
 import com.maniek.medicalclinic.service.DoctorService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/doctors")
 public class DoctorController {
-    private DoctorService doctorService;
+    private final DoctorService doctorService;
 
-    @PostMapping("/assign")
-    public ResponseEntity<String> assignFacilityToDoctor(@RequestParam Long doctorId, @RequestParam Long facilityId) {
+    @PostMapping("/{doctorId}/assign")
+    public ResponseEntity<String> assignFacilityToDoctor(@PathVariable Long doctorId, @RequestParam Long facilityId) {
         return ResponseEntity.ok(doctorService.assignFacility(doctorId, facilityId));
     }
 

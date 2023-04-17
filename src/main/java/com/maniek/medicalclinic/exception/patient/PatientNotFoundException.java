@@ -1,4 +1,4 @@
-package com.maniek.medicalclinic.exception;
+package com.maniek.medicalclinic.exception.patient;
 
 public class PatientNotFoundException extends RuntimeException {
 

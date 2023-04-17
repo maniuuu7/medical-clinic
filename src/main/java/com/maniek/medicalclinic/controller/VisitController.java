@@ -3,17 +3,17 @@ package com.maniek.medicalclinic.controller;
 import com.maniek.medicalclinic.model.dto.VisitDTO;
 import com.maniek.medicalclinic.model.entity.Visit;
 import com.maniek.medicalclinic.service.VisitService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/visits")
 public class VisitController {
-    private VisitService visitService;
+    private final VisitService visitService;
 
     @GetMapping
     public ResponseEntity<List<Visit>> showVisit() {
@@ -22,8 +22,7 @@ public class VisitController {
 
     @PostMapping
     public ResponseEntity<VisitDTO> addVisit(@RequestBody VisitDTO visitDTO) {
-        VisitDTO visit = visitService.addVisit(visitDTO);
-        return ResponseEntity.ok(visit);
+        return ResponseEntity.ok(visitService.addVisit(visitDTO));
     }
 
     @PostMapping("/{visitId}")

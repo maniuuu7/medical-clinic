@@ -1,4 +1,4 @@
-package com.maniek.medicalclinic.exception;
+package com.maniek.medicalclinic.exception.visit;
 
 public class VisitIllegalArgumentException extends RuntimeException {
 

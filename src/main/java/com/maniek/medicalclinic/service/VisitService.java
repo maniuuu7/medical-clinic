@@ -1,8 +1,8 @@
 package com.maniek.medicalclinic.service;
 
-import com.maniek.medicalclinic.exception.PatientNotFoundException;
-import com.maniek.medicalclinic.exception.VisitIllegalArgumentException;
-import com.maniek.medicalclinic.exception.VisitNotFoundException;
+import com.maniek.medicalclinic.exception.patient.PatientNotFoundException;
+import com.maniek.medicalclinic.exception.visit.VisitIllegalArgumentException;
+import com.maniek.medicalclinic.exception.visit.VisitNotFoundException;
 import com.maniek.medicalclinic.mapper.VisitMapper;
 import com.maniek.medicalclinic.model.dto.VisitDTO;
 import com.maniek.medicalclinic.model.entity.Patient;
@@ -28,13 +28,13 @@ public class VisitService {
 
     public VisitDTO addVisit(VisitDTO visitDTO) {
         if (visitRepository.findByTerm(visitDTO.getTerm()).isPresent()) {
-            throw new VisitIllegalArgumentException("Illegal visit ");
+            throw new VisitIllegalArgumentException("Date is unavailable");
         }
         if (visitDTO.getTerm().isBefore(LocalDateTime.now())) {
-            throw new VisitIllegalArgumentException("Illegal visit ");
+            throw new VisitIllegalArgumentException("Date is unavailable");
         }
         if (visitDTO.getTerm().getMinute() % 15 != 0) {
-            throw new VisitIllegalArgumentException("Illegal visit ");
+            throw new VisitIllegalArgumentException("Date is unavailable");
         }
         Visit visit = Visit.from(visitDTO);
         Visit entity = visitRepository.save(visit);
@@ -42,7 +42,7 @@ public class VisitService {
     }
 
     public String assignPatientToVisit(Long visitId, Long patientId) {
-        Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new VisitNotFoundException("Illegal visit"));
+        Visit visit = visitRepository.findById(visitId).orElseThrow(VisitNotFoundException::new);
         Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
         if (visit.getPatient() != null) {
             throw new VisitIllegalArgumentException("Visit already assigned to patient");

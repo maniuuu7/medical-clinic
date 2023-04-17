@@ -4,14 +4,17 @@ import com.maniek.medicalclinic.model.Role;
 import com.maniek.medicalclinic.model.Specialization;
 import com.maniek.medicalclinic.model.dto.DoctorDTO;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -21,6 +24,7 @@ public class Doctor extends UserData {
     private String firstName;
     private String lastName;
     private Specialization specialization;
+
     @ManyToMany
     @JoinTable(name = "doctor_facilities",
             joinColumns = @JoinColumn(name = "doctor_id"),
@@ -40,4 +44,34 @@ public class Doctor extends UserData {
         return new Doctor(null, doctorDTO.getEmail(), doctorDTO.getPassword(), Role.DOCTOR, doctorDTO.getFirstName(),
                 doctorDTO.getLastName(), doctorDTO.getSpecialization(), new ArrayList<>());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Doctor doctor = (Doctor) o;
+        return this.getId() != null && super.equals(doctor);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", specialization=" + specialization +
+                ", facilities=" + facilities.stream()
+                .map(facility -> facility.getId().toString())
+                .toList() +
+                '}';
+    }
+
+
+
+
+
 }

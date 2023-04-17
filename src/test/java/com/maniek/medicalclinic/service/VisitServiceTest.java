@@ -1,6 +1,6 @@
 package com.maniek.medicalclinic.service;
 
-import com.maniek.medicalclinic.exception.VisitIllegalArgumentException;
+import com.maniek.medicalclinic.exception.visit.VisitIllegalArgumentException;
 import com.maniek.medicalclinic.mapper.VisitMapper;
 import com.maniek.medicalclinic.mapper.VisitMapperImpl;
 import com.maniek.medicalclinic.model.dto.VisitDTO;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class VisitServiceTest {
 
     VisitRepository visitRepository;

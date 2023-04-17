@@ -15,25 +15,28 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @AutoConfigureMockMvc
 @SpringBootTest
 public class VisitControllerTest {
+
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
     VisitController visitController;
+
     @Autowired
     PatientController patientController;
 
     @Autowired
     ObjectMapper objectMapper;
+
     @Autowired
     PatientRepository patientRepository;
-
 
     @Test
     void showVisit_VisitExists_VisitsReturned() throws Exception {
@@ -49,7 +52,7 @@ public class VisitControllerTest {
     void assignPatientToVisit_AssignPatient_VisitWithPatientReturned() throws Exception {
         visitController.addVisit(new VisitDTO(LocalDateTime.of(2024, 12, 10, 10, 15)));
         patientController.addPatient(new Patient(null, "dsadsa", "sdsa", Role.PATIENT, "dasds",
-                "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 5)));
+                "Masds", "dsadsad", "987465376", LocalDate.of(1995, 12, 5), new HashSet<>()));
         Patient patient = patientRepository.findAll().stream().reduce((e1, e2)-> e2).get();
         mockMvc.perform(MockMvcRequestBuilders.post("/visits/1?patientId="+patient.getId()))
                 .andDo(print())

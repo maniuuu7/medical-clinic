@@ -1,5 +1,7 @@
 package com.maniek.medicalclinic.service;
 
+import com.maniek.medicalclinic.exception.doctor.DoctorNotFoundException;
+import com.maniek.medicalclinic.exception.facility.FacilityNotFoundException;
 import com.maniek.medicalclinic.mapper.FacilityMapper;
 import com.maniek.medicalclinic.model.dto.FacilityDTO;
 import com.maniek.medicalclinic.model.entity.Doctor;
@@ -19,9 +21,9 @@ public class FacilityService {
 
     public String assignDoctor(Long doctorId, Long facilityId) {
         Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(FacilityNotFoundException::new);
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(DoctorNotFoundException::new);
         doctor.getFacilities().add(facility);
         doctorRepository.save(doctor);
         return "Doctor assigned to facility";
