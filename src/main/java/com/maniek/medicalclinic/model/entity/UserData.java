@@ -23,6 +23,7 @@ public class UserData {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Override

@@ -19,6 +19,7 @@ public class Visit {
     private Long id;
     private LocalDateTime term;
     @ManyToOne
+    @JoinColumn(name = "visit_id")
     private Patient patient;
 
     public static Visit from(VisitDTO visitDTO) {
@@ -37,5 +38,7 @@ public class Visit {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+
 }
 

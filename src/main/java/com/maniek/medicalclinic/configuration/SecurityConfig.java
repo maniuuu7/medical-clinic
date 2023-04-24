@@ -38,15 +38,19 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/patients").anonymous()
-                .antMatchers(HttpMethod.GET,"/patients").hasRole(Role.DOCTOR.name())
-                .antMatchers(HttpMethod.GET,"/patients/*").hasRole(Role.DOCTOR.name())
+                .antMatchers(HttpMethod.GET,"/patients").hasAnyRole(Role.DOCTOR.name(), Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET,"/patients/*").hasAnyRole(Role.DOCTOR.name(), Role.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE,"/patients/*").hasRole(Role.DOCTOR.name())
                 .antMatchers(HttpMethod.PUT,"/patients/*").hasRole(Role.PATIENT.name())
-                .antMatchers(HttpMethod.PATCH, "/patients/*").hasRole(Role.PATIENT.name())
+                .antMatchers(HttpMethod.PATCH, "/patients/**").hasRole(Role.PATIENT.name())
                 .antMatchers(HttpMethod.POST,"/facilities/*/assign").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST,"/facilities").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST,"/doctors/*/assign").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST,"/doctors").hasRole(Role.ADMIN.name())
+                .antMatchers(HttpMethod.POST,"/visits").hasAnyRole(Role.ADMIN.name(), Role.DOCTOR.name())
+                .antMatchers(HttpMethod.POST,"/visits/*").hasAnyRole(Role.DOCTOR.name(), Role.PATIENT.name())
+                .antMatchers(HttpMethod.GET,"/visits").hasAnyRole(Role.DOCTOR.name(), Role.ADMIN.name(), Role.PATIENT.name())
+                .antMatchers("/h2-console/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -60,7 +64,7 @@ public class SecurityConfig {
     }
 
     private UserDetails buildUserDetailsFrom(UserData user) {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
         return User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())

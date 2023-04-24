@@ -31,6 +31,10 @@ public class Doctor extends UserData {
             inverseJoinColumns = @JoinColumn(name = "facility_id"))
     private List<Facility> facilities;
 
+    {
+        super.setRole(Role.DOCTOR);
+    }
+
     public Doctor(Long id, String email, String password, Role role, String firstName, String lastName,
                   Specialization specialization, List<Facility> facilities) {
         super(id, email, password, role);

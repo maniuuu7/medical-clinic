@@ -1,7 +1,10 @@
 package com.maniek.medicalclinic.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Role {
-    DOCTOR("ROLE_Doctor"), PATIENT("ROLE_Patient"), ADMIN("ROLE_Admin");
+    DOCTOR("ROLE_DOCTOR"), PATIENT("ROLE_PATIENT"), ADMIN("ROLE_ADMIN");
     String name;
 
     Role(String name) {

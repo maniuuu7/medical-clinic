@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -25,8 +27,12 @@ public class Patient extends UserData {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
-    @OneToMany
-    private Set<Visit> visits;
+    @OneToMany(mappedBy = "patient")
+    private Set<Visit> visits = new HashSet<>();
+
+    {
+        super.setRole(Role.PATIENT);
+    }
 
     public Patient(Long id, String email, String password, Role role, String idCardNo, String firstName,
                    String lastName, String phoneNumber, LocalDate birthday, Set<Visit> visits) {
@@ -58,5 +64,19 @@ public class Patient extends UserData {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "idCardNo='" + idCardNo + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthday=" + birthday +
+                ", visits=" + visits.stream()
+                .map(Visit::getId)
+                .toList() +
+                '}';
     }
 }

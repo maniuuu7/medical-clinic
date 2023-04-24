@@ -3,6 +3,7 @@ package com.maniek.medicalclinic.model.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +17,5 @@ public class PatientDTO {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
+    private Set<String> visitIds;
 }
